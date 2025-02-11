@@ -1,0 +1,34 @@
+<script setup>
+import { Head } from '@inertiajs/vue3';
+import { useCategoryStore } from '@/stores/categories';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import CategoryForm from '@/Components/Categories/CategoryForm.vue';
+
+const store = useCategoryStore();
+
+const handleSubmit = async (formData) => {
+    await store.createCategory(formData);
+};
+</script>
+
+<template>
+    <AppLayout>
+        <Head title="Create Category" />
+
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-semibold text-gray-900">
+                                Create Category
+                            </h2>
+                        </div>
+
+                        <CategoryForm @submit="handleSubmit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AppLayout>
+</template>
