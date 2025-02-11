@@ -35,6 +35,12 @@ class Resource extends Model
         static::creating(function ($resource) {
             $resource->slug = $resource->slug ?? Str::slug($resource->name);
         });
+
+        static::updating(function ($resource) {
+            if ($resource->isDirty('name')) { // Only update slug if name has changed
+                $resource->slug = Str::slug($resource->name);
+            }
+        });
     }
 
     public function category(): BelongsTo

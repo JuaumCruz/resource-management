@@ -26,6 +26,12 @@ class Tag extends Model
         static::creating(function ($tag) {
             $tag->slug = $tag->slug ?? Str::slug($tag->name);
         });
+
+        static::updating(function ($tag) {
+            if ($tag->isDirty('name')) { // Only update slug if name has changed
+                $tag->slug = Str::slug($tag->name);
+            }
+        });
     }
 
     public function resources(): BelongsToMany

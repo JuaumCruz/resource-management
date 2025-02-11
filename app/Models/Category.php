@@ -27,6 +27,12 @@ class Category extends Model
         static::creating(function ($category) {
             $category->slug = $category->slug ?? Str::slug($category->name);
         });
+
+        static::updating(function ($category) {
+            if ($category->isDirty('name')) { // Only update slug if name has changed
+                $category->slug = Str::slug($category->name);
+            }
+        });
     }
 
     public function resources(): HasMany
