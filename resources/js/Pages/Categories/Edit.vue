@@ -1,7 +1,7 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import { useCategoryStore } from '@/stores/categories';
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import CategoryForm from '@/Components/Categories/CategoryForm.vue';
 
 const props = defineProps({
@@ -19,9 +19,9 @@ const handleSubmit = async (formData) => {
 </script>
 
 <template>
-    <AppLayout>
-        <Head title="Edit Category" />
+    <Head title="Edit Category" />
 
+    <AuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -41,5 +41,5 @@ const handleSubmit = async (formData) => {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </AuthenticatedLayout>
 </template>

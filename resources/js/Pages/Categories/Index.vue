@@ -2,7 +2,7 @@
 import { onMounted } from 'vue';
 import { useCategoryStore } from '@/stores/categories';
 import { Head, Link } from '@inertiajs/vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import CategoryList from '@/Components/Categories/CategoryList.vue';
 
 const store = useCategoryStore();
@@ -13,9 +13,9 @@ onMounted(async () => {
 </script>
 
 <template>
-    <AppLayout>
-        <Head title="Categories" />
+    <Head title="Categories" />
 
+    <AuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -50,5 +50,5 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </AuthenticatedLayout>
 </template>

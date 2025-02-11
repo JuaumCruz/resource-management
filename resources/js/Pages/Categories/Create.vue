@@ -1,7 +1,7 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import { useCategoryStore } from '@/stores/categories';
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import CategoryForm from '@/Components/Categories/CategoryForm.vue';
 
 const store = useCategoryStore();
@@ -12,9 +12,9 @@ const handleSubmit = async (formData) => {
 </script>
 
 <template>
-    <AppLayout>
-        <Head title="Create Category" />
+    <Head title="Create Category" />
 
+    <AuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -30,5 +30,5 @@ const handleSubmit = async (formData) => {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </AuthenticatedLayout>
 </template>

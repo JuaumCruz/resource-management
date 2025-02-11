@@ -2,7 +2,7 @@
 import { onMounted } from 'vue';
 import { useTagStore } from '@/stores/tags';
 import { Head, Link } from '@inertiajs/vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import TagList from '@/Components/Tags/TagList.vue';
 
 const store = useTagStore();
@@ -13,9 +13,9 @@ onMounted(async () => {
 </script>
 
 <template>
-    <AppLayout>
-        <Head title="Tags" />
+    <Head title="Tags" />
 
+    <AuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -50,5 +50,5 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </AuthenticatedLayout>
 </template>
