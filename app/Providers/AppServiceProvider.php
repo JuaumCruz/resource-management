@@ -23,14 +23,5 @@ class AppServiceProvider extends ServiceProvider
         if(app()->environment('production')) {
             URL::forceScheme('https');
         }
-
-        response()->macro('withSecurityHeaders', function ($response) {
-            return $response->withHeaders([
-                'X-XSS-Protection' => '1; mode=block',
-                'X-Frame-Options' => 'SAMEORIGIN',
-                'X-Content-Type-Options' => 'nosniff',
-                'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains'
-            ]);
-        });
     }
 }
