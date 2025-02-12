@@ -1,16 +1,29 @@
 <?php
 
-declare(strict_types=1);
-
+use App\Models\User;
 use App\Models\Category;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use function Pest\Laravel\getJson;
+use function Pest\Laravel\postJson;
+use function Pest\Laravel\putJson;
+use function Pest\Laravel\deleteJson;
 
-uses(RefreshDatabase::class);
+beforeEach(function () {
+    $user = User::factory()->create();
+    test()->user = $user;
+});
+
+test('unauthenticated users cannot access categories', function () {
+    $response = getJson('/api/v1/categories');
+    expect($response->status())->toBe(401);
+});
 
 test('can list categories', function () {
+    Sanctum::actingAs(test()->user);
+
     $categories = Category::factory()->count(3)->create();
 
-    $response = $this->getJson('/api/v1/categories');
+    $response = getJson('/api/v1/categories');
 
     $response->assertOk()
         ->assertJsonCount(3, 'data')
@@ -29,12 +42,14 @@ test('can list categories', function () {
 });
 
 test('can create a category', function () {
+    Sanctum::actingAs(test()->user);
+
     $categoryData = [
         'name' => 'Test Category',
         'description' => 'Test Description'
     ];
 
-    $response = $this->postJson('/api/v1/categories', $categoryData);
+    $response = postJson('/api/v1/categories', $categoryData);
 
     $response->assertCreated()
         ->assertJson([
@@ -44,10 +59,21 @@ test('can create a category', function () {
         ]);
 });
 
+test('creating a category requires valid data', function () {
+    Sanctum::actingAs(test()->user);
+
+    $response = postJson('/api/v1/categories', []);
+
+    $response->assertUnprocessable()
+        ->assertJsonValidationErrors(['name']);
+});
+
 test('can show a category', function () {
+    Sanctum::actingAs(test()->user);
+
     $category = Category::factory()->create();
 
-    $response = $this->getJson("/api/v1/categories/{$category->id}");
+    $response = getJson("/api/v1/categories/{$category->id}");
 
     $response->assertOk()
         ->assertJson([
@@ -58,13 +84,15 @@ test('can show a category', function () {
 });
 
 test('can update a category', function () {
+    Sanctum::actingAs(test()->user);
+
     $category = Category::factory()->create();
     $updateData = [
         'name' => 'Updated Category',
         'description' => 'Updated Description'
     ];
 
-    $response = $this->putJson("/api/v1/categories/{$category->id}", $updateData);
+    $response = putJson("/api/v1/categories/{$category->id}", $updateData);
 
     $response->assertOk()
         ->assertJson([
@@ -75,9 +103,11 @@ test('can update a category', function () {
 });
 
 test('can delete a category', function () {
+    Sanctum::actingAs(test()->user);
+
     $category = Category::factory()->create();
 
-    $response = $this->deleteJson("/api/v1/categories/{$category->id}");
+    $response = deleteJson("/api/v1/categories/{$category->id}");
 
     $response->assertNoContent();
     $this->assertSoftDeleted($category);
