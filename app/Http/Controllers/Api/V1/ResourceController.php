@@ -10,14 +10,20 @@ use App\Http\Requests\Api\V1\StoreResourceRequest;
 use App\Http\Requests\Api\V1\UpdateResourceRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class ResourceController extends Controller
 {
     public function index(): JsonResponse
     {
-        $resources = Resource::with(['category', 'tags'])
-            ->latest()
-            ->paginate();
+        $cacheKey = 'resources_' . request()->page ?? 1;
+        $ttl = config('cache.ttl.resources');
+
+        $resources = Cache::remember($cacheKey, $ttl, function () {
+            return Resource::with(['category', 'tags'])
+                ->latest()
+                ->paginate();
+        });
 
         return response()->json($resources);
     }

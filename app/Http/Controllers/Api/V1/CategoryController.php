@@ -10,14 +10,20 @@ use App\Http\Requests\Api\V1\StoreCategoryRequest;
 use App\Http\Requests\Api\V1\UpdateCategoryRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $categories = Category::withCount('resources')
-            ->latest()
-            ->paginate();
+        $cacheKey = 'categories_' . request()->page ?? 1;
+        $ttl = config('cache.ttl.categories');
+
+        $categories = Cache::remember($cacheKey, $ttl, function () {
+            return Category::withCount('resources')
+                ->latest()
+                ->paginate();
+        });
 
         return response()->json($categories);
     }

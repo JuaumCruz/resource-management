@@ -93,6 +93,11 @@ return [
             'driver' => 'octane',
         ],
 
+        'ttl' => [
+            'resources' => env('CACHE_RESOURCES_TTL', 3600),
+            'categories' => env('CACHE_CATEGORIES_TTL', 3600),
+            'tags' => env('CACHE_TAGS_TTL', 3600),
+        ],
     ],
 
     /*

@@ -10,14 +10,20 @@ use App\Http\Requests\Api\V1\StoreTagRequest;
 use App\Http\Requests\Api\V1\UpdateTagRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class TagController extends Controller
 {
     public function index(): JsonResponse
     {
-        $tags = Tag::withCount('resources')
-            ->latest()
-            ->paginate();
+        $cacheKey = 'tags_' . request()->page ?? 1;
+        $ttl = config('cache.ttl.tags');
+
+        $tags = Cache::remember($cacheKey, $ttl, function () {
+            return Tag::withCount('resources')
+                ->latest()
+                ->paginate();
+        });
 
         return response()->json($tags);
     }
